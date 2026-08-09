@@ -1,0 +1,61 @@
+---
+import { Icon } from 'astro-icon/components'
+
+import Section from '@components/ui/Section.astro'
+import SectionHeading from '@components/ui/SectionHeading.astro'
+import { differentiators, metrics } from '@data/services'
+---
+
+<Section id="por-que-nosotros" tone="dark" labelledby="por-que-nosotros-title">
+    <SectionHeading
+        id="por-que-nosotros-title"
+        eyebrow="Por qué elegirnos"
+        title="Su mejor alternativa en suministros y servicios industriales"
+        description="Reducir proveedores reduce tiempos muertos. Esa es la razón por la que nuestros clientes concentran en nosotros el suministro y la ejecución."
+        tone="dark"
+        align="center"
+        class="text-center"
+    />
+
+    <div class="mt-14 grid gap-6 md:grid-cols-3">
+        {
+            differentiators.map((item, index) => (
+                <article
+                    class="flex flex-col rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm transition duration-300 hover:border-white/25 hover:bg-white/10"
+                    data-reveal
+                    style={`--reveal-delay: ${index * 90}ms`}
+                >
+                    <span class="bg-accent-400 text-brand-950 flex size-14 items-center justify-center rounded-2xl">
+                        <Icon
+                            name={item.icon}
+                            class="size-7"
+                            aria-hidden="true"
+                        />
+                    </span>
+                    <h3 class="mt-6 text-xl text-white">{item.title}</h3>
+                    <p class="text-brand-100/80 mt-3 leading-relaxed">
+                        {item.description}
+                    </p>
+                </article>
+            ))
+        }
+    </div>
+
+    <dl
+        class="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-white/10 bg-white/10 lg:grid-cols-4"
+        data-reveal
+    >
+        {
+            metrics.map((metric) => (
+                <div class="bg-brand-950 flex flex-col items-center px-6 py-8 text-center">
+                    <dt class="text-brand-200/80 order-2 mt-2 text-sm">
+                        {metric.label}
+                    </dt>
+                    <dd class="font-display order-1 text-4xl font-semibold text-white">
+                        {metric.value}
+                    </dd>
+                </div>
+            ))
+        }
+    </dl>
+</Section>

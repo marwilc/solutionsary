@@ -1,0 +1,109 @@
+# Solutionsary — Apache rules for shared hosting / cPanel
+# Place this file at the document root (public_html) alongside index.html.
+
+# ------------------------------------------------------------------
+# Security
+# ------------------------------------------------------------------
+
+# Block directory listing
+Options -Indexes
+
+# Follow symlinks if the host requires it for .htaccess inheritance
+Options +FollowSymLinks
+
+# Deny access to hidden files (except .well-known for SSL / ACME challenges)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule "(^|/)\.(?!well-known/)" - [F]
+</IfModule>
+
+# ------------------------------------------------------------------
+# HTTPS and www canonical
+# ------------------------------------------------------------------
+# Canonical: https://solutionsary.com (SSL already active on this host).
+# Option B (keep www) is left commented in case the host ever needs it.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on [OR]
+    RewriteCond %{HTTP_HOST} ^www\. [NC]
+    RewriteRule ^ https://solutionsary.com%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Option B — force HTTPS and keep www (canonical: https://www.solutionsary.com)
+# <IfModule mod_rewrite.c>
+#     RewriteEngine On
+#     RewriteCond %{HTTPS} !=on [OR]
+#     RewriteCond %{HTTP_HOST} !^www\. [NC]
+#     RewriteRule ^ https://www.solutionsary.com%{REQUEST_URI} [L,R=301]
+# </IfModule>
+
+# ------------------------------------------------------------------
+# SPA-style fallback is NOT needed: this site is static multi-file HTML.
+# Custom 404
+# ------------------------------------------------------------------
+ErrorDocument 404 /404.html
+
+# ------------------------------------------------------------------
+# Compression
+# ------------------------------------------------------------------
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+    AddOutputFilterByType DEFLATE application/javascript application/json
+    AddOutputFilterByType DEFLATE application/xml application/xhtml+xml
+    AddOutputFilterByType DEFLATE image/svg+xml font/woff2
+</IfModule>
+
+# ------------------------------------------------------------------
+# Caching
+# ------------------------------------------------------------------
+# Hashed assets under /assets/ can be cached forever. HTML stays short lived
+# so a new deploy is visible immediately without asking visitors to hard-refresh.
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 week"
+
+    ExpiresByType text/html "access plus 0 seconds"
+    ExpiresByType text/xml "access plus 0 seconds"
+    ExpiresByType application/xml "access plus 0 seconds"
+    ExpiresByType application/json "access plus 0 seconds"
+    ExpiresByType application/manifest+json "access plus 1 day"
+
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/avif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+    # Hashed build assets
+    <FilesMatch "\.(?:css|js|woff2|webp|avif)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # HTML always revalidated
+    <FilesMatch "\.(?:html|xml)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+
+    # Security headers (safe defaults for a static brochure site)
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+# ------------------------------------------------------------------
+# MIME types that some hosts still miss
+# ------------------------------------------------------------------
+<IfModule mod_mime.c>
+    AddType font/woff2 .woff2
+    AddType image/webp .webp
+    AddType image/avif .avif
+    AddType application/manifest+json .webmanifest
+</IfModule>

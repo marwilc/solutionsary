@@ -1,0 +1,111 @@
+---
+import { Image } from 'astro:assets'
+import type { ImageMetadata } from 'astro'
+
+import { responsiveImage } from '@utils/responsiveImage'
+
+interface Props {
+    before: { src: ImageMetadata; alt: string }
+    after: { src: ImageMetadata; alt: string }
+    label: string
+}
+
+const { before, after, label } = Astro.props
+---
+
+<div
+    class="group/compare bg-steel-950 relative isolate aspect-4/3 w-full overflow-hidden"
+    data-compare
+>
+    <Image
+        src={after.src}
+        alt={after.alt}
+        {...responsiveImage(after.src, [400, 700])}
+        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+        quality={72}
+        class="absolute inset-0 size-full object-cover"
+        loading="lazy"
+    />
+
+    <div
+        class="absolute inset-0 [clip-path:inset(0_calc(100%_-_var(--compare-position,50%))_0_0)]"
+        data-compare-clip
+    >
+        <Image
+            src={before.src}
+            alt={before.alt}
+            {...responsiveImage(before.src, [400, 700])}
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            quality={72}
+            class="absolute inset-0 size-full object-cover"
+            loading="lazy"
+        />
+    </div>
+
+    <span
+        class="bg-brand-950/85 font-display pointer-events-none absolute top-3 left-3 z-20 rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-widest text-white uppercase backdrop-blur-sm"
+    >
+        Antes
+    </span>
+    <span
+        class="bg-accent-500 font-display text-brand-950 pointer-events-none absolute top-3 right-3 z-20 rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-widest uppercase"
+    >
+        Después
+    </span>
+
+    <div
+        class="pointer-events-none absolute inset-y-0 z-20 w-0.5 -translate-x-1/2 bg-white/90 shadow-[0_0_12px_rgba(0,0,0,0.35)]"
+        style="left: var(--compare-position, 50%)"
+        data-compare-handle
+    >
+        <span
+            class="text-brand-900 shadow-card absolute top-1/2 left-1/2 flex size-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white"
+        >
+            <svg
+                viewBox="0 0 24 24"
+                class="size-5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="m9 7-5 5 5 5"></path>
+                <path d="m15 7 5 5-5 5"></path>
+            </svg>
+        </span>
+    </div>
+
+    <input
+        type="range"
+        min="0"
+        max="100"
+        value="50"
+        step="1"
+        aria-label={`Comparar antes y después: ${label}`}
+        class="absolute inset-0 z-30 size-full cursor-ew-resize appearance-none bg-transparent focus-visible:outline-offset-[-3px] [&::-moz-range-thumb]:h-full [&::-moz-range-thumb]:w-10 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:opacity-0 [&::-webkit-slider-thumb]:h-full [&::-webkit-slider-thumb]:w-10 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:opacity-0"
+        data-compare-input
+    />
+</div>
+
+<script>
+    document
+        .querySelectorAll<HTMLElement>('[data-compare]')
+        .forEach((container) => {
+            const input = container.querySelector<HTMLInputElement>(
+                '[data-compare-input]'
+            )
+            if (!input) return
+
+            const sync = () => {
+                container.style.setProperty(
+                    '--compare-position',
+                    `${input.value}%`
+                )
+            }
+
+            input.addEventListener('input', sync)
+            sync()
+        })
+</script>

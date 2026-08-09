@@ -1,0 +1,147 @@
+---
+import { Image } from 'astro:assets'
+import { Icon } from 'astro-icon/components'
+
+import Button from '@components/ui/Button.astro'
+import logo from '@images/brand/logo-primary.png'
+import { navigationLinks, siteConfig } from '@data/siteConfig'
+---
+
+<header
+    class="border-steel-200/70 sticky top-0 z-50 border-b bg-white/85 backdrop-blur-lg"
+>
+    <div class="container-page flex h-18 items-center justify-between gap-6">
+        <a
+            href="#inicio"
+            class="flex shrink-0 items-center"
+            aria-label={`${siteConfig.legalName}, ir al inicio`}
+        >
+            <Image
+                src={logo}
+                alt={siteConfig.legalName}
+                widths={[160, 320]}
+                sizes="160px"
+                class="h-9 w-auto lg:h-10"
+                loading="eager"
+            />
+        </a>
+
+        <nav
+            class="hidden items-center gap-1 lg:flex"
+            aria-label="Navegación principal"
+        >
+            {
+                navigationLinks.map((link) => (
+                    <a
+                        href={link.href}
+                        class="font-display text-steel-700 hover:bg-brand-50 hover:text-brand-800 rounded-full px-4 py-2 text-sm font-medium transition"
+                    >
+                        {link.label}
+                    </a>
+                ))
+            }
+        </nav>
+
+        <div class="hidden items-center gap-3 lg:flex">
+            <a
+                href={`tel:${siteConfig.contact.phoneLink}`}
+                class="font-display text-brand-800 hover:text-brand-600 flex items-center gap-2 text-sm font-semibold transition"
+            >
+                <Icon name="lucide:phone" class="size-4" aria-hidden="true" />
+                {siteConfig.contact.phoneDisplay}
+            </a>
+            <Button href="#contacto" icon="lucide:arrow-right">
+                Solicitar cotización
+            </Button>
+        </div>
+
+        <button
+            type="button"
+            class="text-brand-900 hover:bg-brand-50 flex size-11 items-center justify-center rounded-full transition lg:hidden"
+            aria-controls="mobile-menu"
+            aria-expanded="false"
+            data-menu-toggle
+        >
+            <span class="sr-only">Abrir menú de navegación</span>
+            <Icon
+                name="lucide:menu"
+                class="size-6"
+                aria-hidden="true"
+                data-menu-icon="open"
+            />
+            <Icon
+                name="lucide:x"
+                class="hidden size-6"
+                aria-hidden="true"
+                data-menu-icon="close"
+            />
+        </button>
+    </div>
+
+    <div
+        id="mobile-menu"
+        class="border-steel-200 hidden border-t bg-white lg:hidden"
+        data-menu-panel
+    >
+        <nav class="container-page flex flex-col py-4" aria-label="Navegación">
+            {
+                navigationLinks.map((link) => (
+                    <a
+                        href={link.href}
+                        class="font-display text-steel-800 hover:bg-brand-50 hover:text-brand-800 rounded-xl px-3 py-3 text-base font-medium transition"
+                        data-menu-link
+                    >
+                        {link.label}
+                    </a>
+                ))
+            }
+            <div class="mt-4 flex flex-col gap-3">
+                <Button href="#contacto" size="lg" icon="lucide:arrow-right">
+                    Solicitar cotización
+                </Button>
+                <Button
+                    href={`tel:${siteConfig.contact.phoneLink}`}
+                    variant="secondary"
+                    size="lg"
+                    icon="lucide:phone"
+                    iconPosition="start"
+                >
+                    {siteConfig.contact.phoneDisplay}
+                </Button>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<script>
+    const toggle =
+        document.querySelector<HTMLButtonElement>('[data-menu-toggle]')
+    const panel = document.querySelector<HTMLElement>('[data-menu-panel]')
+    const openIcon = document.querySelector<HTMLElement>(
+        '[data-menu-icon="open"]'
+    )
+    const closeIcon = document.querySelector<HTMLElement>(
+        '[data-menu-icon="close"]'
+    )
+
+    if (toggle && panel && openIcon && closeIcon) {
+        const setOpen = (open: boolean) => {
+            toggle.setAttribute('aria-expanded', String(open))
+            panel.classList.toggle('hidden', !open)
+            openIcon.classList.toggle('hidden', open)
+            closeIcon.classList.toggle('hidden', !open)
+        }
+
+        toggle.addEventListener('click', () => {
+            setOpen(toggle.getAttribute('aria-expanded') !== 'true')
+        })
+
+        panel.querySelectorAll('[data-menu-link]').forEach((link) => {
+            link.addEventListener('click', () => setOpen(false))
+        })
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') setOpen(false)
+        })
+    }
+</script>

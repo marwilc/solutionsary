@@ -1,0 +1,183 @@
+---
+import { Image } from 'astro:assets'
+import { Icon } from 'astro-icon/components'
+
+import Button from '@components/ui/Button.astro'
+import heroImage from '@images/projects/waterproofing-membrane-application.jpg'
+import secondaryImage from '@images/projects/stainless-steel-machining.jpg'
+import { industries } from '@data/services'
+import { siteConfig } from '@data/siteConfig'
+import { responsiveImage } from '@utils/responsiveImage'
+---
+
+<section id="inicio" class="bg-brand-950 relative overflow-hidden">
+    <div class="bg-blueprint absolute inset-0 opacity-60" aria-hidden="true">
+    </div>
+    <div
+        class="bg-brand-700/25 absolute -top-40 -right-32 size-[36rem] rounded-full blur-3xl"
+        aria-hidden="true"
+    >
+    </div>
+
+    <div class="container-page relative py-16 lg:py-24">
+        <div class="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+            <div class="lg:col-span-7">
+                <p
+                    class="eyebrow text-brand-300"
+                    data-reveal
+                    style="--reveal-delay: 0ms"
+                >
+                    <span class="bg-accent-400 inline-block h-px w-8"></span>
+                    Valencia, Carabobo · Cobertura nacional
+                </p>
+
+                <h1
+                    class="text-hero mt-6 text-white"
+                    data-reveal
+                    style="--reveal-delay: 80ms"
+                >
+                    Todas las soluciones industriales en{' '}
+                    <span class="text-brand-300">un solo lugar</span>
+                </h1>
+
+                <p
+                    class="text-brand-100/90 mt-7 max-w-xl text-lg leading-relaxed lg:text-xl"
+                    data-reveal
+                    style="--reveal-delay: 160ms"
+                >
+                    Suministro de repuestos, mantenimiento de líneas de
+                    producción, obras civiles y fabricación de piezas a la
+                    medida. Un solo proveedor para que su planta no se detenga.
+                </p>
+
+                <div
+                    class="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center"
+                    data-reveal
+                    style="--reveal-delay: 240ms"
+                >
+                    <Button
+                        href={siteConfig.contact.whatsappUrl}
+                        variant="inverse"
+                        size="lg"
+                        icon="lucide:message-circle"
+                        iconPosition="start"
+                        external
+                    >
+                        Cotizar por WhatsApp
+                    </Button>
+                    <Button
+                        href="#servicios"
+                        variant="secondary"
+                        size="lg"
+                        icon="lucide:arrow-down"
+                        class="!bg-transparent !text-white !ring-white/25 hover:!bg-white/10 hover:!ring-white/50"
+                    >
+                        Ver servicios
+                    </Button>
+                </div>
+
+                <dl
+                    class="mt-12 flex flex-wrap gap-x-10 gap-y-6"
+                    data-reveal
+                    style="--reveal-delay: 320ms"
+                >
+                    <div>
+                        <dt class="text-brand-200/80 text-sm">
+                            Marcas representadas
+                        </dt>
+                        <dd
+                            class="font-display text-3xl font-semibold text-white"
+                        >
+                            +23
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-brand-200/80 text-sm">
+                            Líneas de servicio
+                        </dt>
+                        <dd
+                            class="font-display text-3xl font-semibold text-white"
+                        >
+                            4
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-brand-200/80 text-sm">
+                            Respuesta a solicitudes
+                        </dt>
+                        <dd
+                            class="font-display text-3xl font-semibold text-white"
+                        >
+                            24 h
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            <div class="lg:col-span-5">
+                <div
+                    class="relative mx-auto max-w-md lg:max-w-none"
+                    data-reveal
+                    style="--reveal-delay: 200ms"
+                >
+                    <div
+                        class="overflow-hidden rounded-3xl ring-1 ring-white/10"
+                    >
+                        <Image
+                            src={heroImage}
+                            alt="Operario de Solutions Ary aplicando manto asfáltico con soplete sobre el techo de una planta"
+                            {...responsiveImage(heroImage, [420, 640, 860])}
+                            sizes="(min-width: 1024px) 40vw, (min-width: 640px) 60vw, 90vw"
+                            quality={74}
+                            class="aspect-3/4 w-full object-cover"
+                            loading="eager"
+                            fetchpriority="high"
+                        />
+                    </div>
+
+                    <div
+                        class="ring-brand-950 absolute -bottom-8 -left-6 hidden w-48 overflow-hidden rounded-2xl ring-4 sm:block"
+                    >
+                        <Image
+                            src={secondaryImage}
+                            alt="Pieza de acero inoxidable mecanizada en el taller de tornería"
+                            {...responsiveImage(secondaryImage, [200, 400])}
+                            sizes="192px"
+                            quality={72}
+                            class="aspect-square w-full object-cover"
+                            loading="lazy"
+                        />
+                    </div>
+
+                    <div
+                        class="bg-accent-400 font-display text-brand-950 shadow-card absolute -top-5 -right-3 flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold"
+                    >
+                        <Icon
+                            name="lucide:badge-check"
+                            class="size-4"
+                            aria-hidden="true"
+                        />
+                        Trabajos reales
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="relative border-t border-white/10">
+        <div
+            class="container-page flex flex-wrap items-center gap-x-8 gap-y-3 py-5"
+        >
+            <span
+                class="font-display text-brand-300 text-xs font-semibold tracking-widest uppercase"
+            >
+                Sectores atendidos
+            </span>
+            {
+                industries.map((industry) => (
+                    <span class="text-brand-100/70 text-sm">{industry}</span>
+                ))
+            }
+        </div>
+    </div>
+</section>

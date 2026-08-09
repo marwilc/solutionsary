@@ -1,0 +1,31 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro'
+
+import About from '@components/sections/About.astro'
+import Contact from '@components/sections/Contact.astro'
+import Footer from '@components/sections/Footer.astro'
+import Header from '@components/sections/Header.astro'
+import Hero from '@components/sections/Hero.astro'
+import Partners from '@components/sections/Partners.astro'
+import Projects from '@components/sections/Projects.astro'
+import Services from '@components/sections/Services.astro'
+import WhyUs from '@components/sections/WhyUs.astro'
+import WhatsappFloat from '@components/ui/WhatsappFloat.astro'
+---
+
+<BaseLayout>
+    <Header />
+
+    <main id="main">
+        <Hero />
+        <About />
+        <Services />
+        <Projects />
+        <WhyUs />
+        <Partners />
+        <Contact />
+    </main>
+
+    <Footer />
+    <WhatsappFloat />
+</BaseLayout>

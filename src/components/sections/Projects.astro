@@ -1,0 +1,124 @@
+---
+import { Image } from 'astro:assets'
+
+import BeforeAfter from '@components/ui/BeforeAfter.astro'
+import Section from '@components/ui/Section.astro'
+import SectionHeading from '@components/ui/SectionHeading.astro'
+import { projects } from '@data/projects'
+import { responsiveImage } from '@utils/responsiveImage'
+
+const categories = ['Todos', ...new Set(projects.map((p) => p.category))]
+---
+
+<Section id="proyectos" tone="muted" labelledby="proyectos-title">
+    <div
+        class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between"
+    >
+        <SectionHeading
+            id="proyectos-title"
+            eyebrow="Trabajos ejecutados"
+            title="Resultados que se ven, no promesas"
+            description="Cada trabajo documentado con su estado inicial y final. Arrastre el control para comparar el antes y el después."
+        />
+
+        <div
+            class="flex flex-wrap gap-2"
+            role="group"
+            aria-label="Filtrar proyectos por categoría"
+        >
+            {
+                categories.map((category, index) => (
+                    <button
+                        type="button"
+                        class="border-steel-200 font-display text-steel-700 hover:border-brand-300 hover:text-brand-800 aria-pressed:border-brand-600 aria-pressed:bg-brand-600 rounded-full border bg-white px-4 py-2 text-sm font-medium transition aria-pressed:text-white"
+                        aria-pressed={index === 0 ? 'true' : 'false'}
+                        data-project-filter={category}
+                    >
+                        {category}
+                    </button>
+                ))
+            }
+        </div>
+    </div>
+
+    <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+            projects.map((project, index) => (
+                <article
+                    class="border-steel-200 shadow-card hover:shadow-card-hover flex flex-col overflow-hidden rounded-3xl border bg-white transition duration-300 hover:-translate-y-1"
+                    data-reveal
+                    data-project-category={project.category}
+                    style={`--reveal-delay: ${(index % 3) * 80}ms`}
+                >
+                    {project.before ? (
+                        <BeforeAfter
+                            before={project.before}
+                            after={project.after}
+                            label={project.title}
+                        />
+                    ) : (
+                        <div class="bg-steel-950 relative aspect-4/3 overflow-hidden">
+                            <Image
+                                src={project.after.src}
+                                alt={project.after.alt}
+                                {...responsiveImage(
+                                    project.after.src,
+                                    [400, 700]
+                                )}
+                                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                                quality={72}
+                                class="size-full object-cover"
+                                loading="lazy"
+                            />
+                        </div>
+                    )}
+
+                    <div class="flex flex-1 flex-col p-6">
+                        <span class="font-display text-brand-600 text-xs font-semibold tracking-widest uppercase">
+                            {project.category}
+                        </span>
+                        <h3 class="mt-2 text-xl">{project.title}</h3>
+                        <p class="text-steel-600 mt-3 text-sm leading-relaxed">
+                            {project.summary}
+                        </p>
+                    </div>
+                </article>
+            ))
+        }
+    </div>
+
+    <p class="sr-only" role="status" data-project-status></p>
+</Section>
+
+<script>
+    const filters = document.querySelectorAll<HTMLButtonElement>(
+        '[data-project-filter]'
+    )
+    const cards = document.querySelectorAll<HTMLElement>(
+        '[data-project-category]'
+    )
+    const status = document.querySelector<HTMLElement>('[data-project-status]')
+
+    filters.forEach((filter) => {
+        filter.addEventListener('click', () => {
+            const selected = filter.dataset.projectFilter
+
+            filters.forEach((button) => {
+                button.setAttribute('aria-pressed', String(button === filter))
+            })
+
+            let visible = 0
+            cards.forEach((card) => {
+                const matches =
+                    selected === 'Todos' ||
+                    card.dataset.projectCategory === selected
+                card.classList.toggle('hidden', !matches)
+                if (matches) visible += 1
+            })
+
+            if (status) {
+                status.textContent = `${visible} proyectos mostrados en la categoría ${selected}.`
+            }
+        })
+    })
+</script>

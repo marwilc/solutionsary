@@ -1,0 +1,44 @@
+---
+interface Props {
+    id?: string
+    eyebrow: string
+    title: string
+    description?: string
+    align?: 'start' | 'center'
+    tone?: 'light' | 'dark'
+    class?: string
+}
+
+const {
+    id,
+    eyebrow,
+    title,
+    description,
+    align = 'start',
+    tone = 'light',
+    class: className = '',
+} = Astro.props
+
+const alignment =
+    align === 'center' ? 'items-center text-center mx-auto' : 'items-start'
+
+const titleTone = tone === 'dark' ? 'text-white' : 'text-brand-950'
+const descriptionTone = tone === 'dark' ? 'text-brand-100' : 'text-steel-600'
+const eyebrowTone = tone === 'dark' ? 'text-brand-300' : ''
+const ruleTone = tone === 'dark' ? 'bg-accent-400' : 'bg-accent-500'
+---
+
+<div class={`flex max-w-3xl flex-col ${alignment} ${className}`}>
+    <p class={`eyebrow ${eyebrowTone}`}>
+        <span class={`inline-block h-px w-8 ${ruleTone}`}></span>
+        {eyebrow}
+    </p>
+    <h2 id={id} class={`mt-4 text-section ${titleTone}`}>{title}</h2>
+    {
+        description && (
+            <p class={`mt-5 text-lg leading-relaxed ${descriptionTone}`}>
+                {description}
+            </p>
+        )
+    }
+</div>

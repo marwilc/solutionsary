@@ -1,0 +1,134 @@
+---
+import { Image } from 'astro:assets'
+import { Icon } from 'astro-icon/components'
+
+import logoWhite from '@images/brand/logo-white.png'
+import { navigationLinks, siteConfig } from '@data/siteConfig'
+import { services } from '@data/services'
+
+const { address, email, phoneDisplay, phoneLink } = siteConfig.contact
+---
+
+<footer class="bg-brand-950 text-brand-100">
+    <div class="container-page py-16 lg:py-20">
+        <div class="grid gap-12 lg:grid-cols-12">
+            <div class="lg:col-span-4">
+                <Image
+                    src={logoWhite}
+                    alt={siteConfig.legalName}
+                    widths={[180, 360]}
+                    sizes="180px"
+                    class="h-11 w-auto"
+                    loading="lazy"
+                />
+                <p class="text-brand-100/75 mt-6 max-w-sm leading-relaxed">
+                    Suministros industriales, mantenimiento, obras civiles y
+                    tornería para la industria venezolana.
+                </p>
+
+                <a
+                    href={siteConfig.social.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mt-7 inline-flex size-11 items-center justify-center rounded-full border border-white/15 text-white transition hover:border-white/40 hover:bg-white/10"
+                    aria-label={`${siteConfig.legalName} en Instagram`}
+                >
+                    <Icon
+                        name="lucide:instagram"
+                        class="size-5"
+                        aria-hidden="true"
+                    />
+                </a>
+            </div>
+
+            <div class="lg:col-span-2">
+                <h2
+                    class="font-display text-brand-300 text-xs font-semibold tracking-widest uppercase"
+                >
+                    Navegación
+                </h2>
+                <ul class="mt-5 flex flex-col gap-3">
+                    {
+                        navigationLinks.map((link) => (
+                            <li>
+                                <a
+                                    href={link.href}
+                                    class="text-brand-100/75 underline-offset-4 transition hover:text-white hover:underline"
+                                >
+                                    {link.label}
+                                </a>
+                            </li>
+                        ))
+                    }
+                </ul>
+            </div>
+
+            <div class="lg:col-span-3">
+                <h2
+                    class="font-display text-brand-300 text-xs font-semibold tracking-widest uppercase"
+                >
+                    Servicios
+                </h2>
+                <ul class="mt-5 flex flex-col gap-3">
+                    {
+                        services.map((service) => (
+                            <li>
+                                <a
+                                    href="#servicios"
+                                    class="text-brand-100/75 underline-offset-4 transition hover:text-white hover:underline"
+                                >
+                                    {service.title}
+                                </a>
+                            </li>
+                        ))
+                    }
+                </ul>
+            </div>
+
+            <div class="lg:col-span-3">
+                <h2
+                    class="font-display text-brand-300 text-xs font-semibold tracking-widest uppercase"
+                >
+                    Contacto
+                </h2>
+                <address class="mt-5 flex flex-col gap-3 not-italic">
+                    <span class="text-brand-100/75">
+                        {address.street}, {address.city}, {address.region}
+                    </span>
+                    <a
+                        href={`tel:${phoneLink}`}
+                        class="text-brand-100/75 underline-offset-4 transition hover:text-white hover:underline"
+                    >
+                        {phoneDisplay}
+                    </a>
+                    <a
+                        href={`mailto:${email}`}
+                        class="text-brand-100/75 underline-offset-4 transition hover:text-white hover:underline"
+                    >
+                        {email}
+                    </a>
+                </address>
+            </div>
+        </div>
+
+        <div
+            class="text-brand-100/60 mt-14 flex flex-col gap-3 border-t border-white/10 pt-8 text-sm sm:flex-row sm:items-center sm:justify-between"
+        >
+            <p>
+                © <span data-current-year>2026</span>{' '}
+                {siteConfig.legalName}. Todos los derechos reservados.
+            </p>
+            <p>
+                Desarrollado por{' '}
+                <a
+                    href="https://marwilc.github.io"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-brand-200 underline-offset-4 transition hover:text-white hover:underline"
+                >
+                    Marwilc
+                </a>
+            </p>
+        </div>
+    </div>
+</footer>

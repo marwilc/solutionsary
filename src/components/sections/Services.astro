@@ -1,0 +1,105 @@
+---
+import { Icon } from 'astro-icon/components'
+
+import Button from '@components/ui/Button.astro'
+import Section from '@components/ui/Section.astro'
+import SectionHeading from '@components/ui/SectionHeading.astro'
+import { services } from '@data/services'
+import { buildWhatsappUrl } from '@data/siteConfig'
+---
+
+<Section id="servicios" tone="white" labelledby="servicios-title">
+    <SectionHeading
+        id="servicios-title"
+        eyebrow="Qué hacemos"
+        title="Cuatro líneas de servicio que cubren toda la operación"
+        description="El funcionamiento de una planta depende de sus procesos de manufactura. Nos enfocamos en los rubros que más impacto tienen sobre la continuidad de su producción."
+    />
+
+    <div class="mt-14 grid gap-6 md:grid-cols-2">
+        {
+            services.map((service, index) => (
+                <article
+                    class="group border-steel-200 hover:border-brand-200 hover:shadow-card-hover relative flex flex-col rounded-3xl border bg-white p-8 transition duration-300 hover:-translate-y-1"
+                    data-reveal
+                    style={`--reveal-delay: ${index * 80}ms`}
+                >
+                    <div class="flex items-start justify-between gap-4">
+                        <span class="bg-brand-50 text-brand-700 group-hover:bg-brand-600 flex size-14 items-center justify-center rounded-2xl transition group-hover:text-white">
+                            <Icon
+                                name={service.icon}
+                                class="size-7"
+                                aria-hidden="true"
+                            />
+                        </span>
+                        <span class="font-display text-steel-300 text-sm font-semibold">
+                            {String(index + 1).padStart(2, '0')}
+                        </span>
+                    </div>
+
+                    <h3 class="mt-6 text-2xl">{service.title}</h3>
+                    <p class="text-steel-600 mt-3 leading-relaxed">
+                        {service.description}
+                    </p>
+
+                    <ul class="border-steel-100 mt-6 flex flex-col gap-2.5 border-t pt-6">
+                        {service.highlights.map((highlight) => (
+                            <li class="text-steel-700 flex items-start gap-2.5 text-sm">
+                                <Icon
+                                    name="lucide:check"
+                                    class="text-brand-600 mt-0.5 size-4 shrink-0"
+                                    aria-hidden="true"
+                                />
+                                {highlight}
+                            </li>
+                        ))}
+                    </ul>
+
+                    <a
+                        href={buildWhatsappUrl(
+                            `Hola Solutionsary, quiero información sobre ${service.title.toLowerCase()}.`
+                        )}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="font-display text-brand-700 hover:text-brand-900 mt-7 inline-flex items-center gap-2 text-sm font-semibold transition hover:gap-3"
+                    >
+                        Consultar este servicio
+                        <Icon
+                            name="lucide:arrow-right"
+                            class="size-4"
+                            aria-hidden="true"
+                        />
+                    </a>
+                </article>
+            ))
+        }
+    </div>
+
+    <div
+        class="bg-brand-950 mt-14 flex flex-col items-start gap-6 rounded-3xl p-8 sm:flex-row sm:items-center sm:justify-between lg:p-10"
+        data-reveal
+    >
+        <div>
+            <h3 class="text-2xl text-white">
+                ¿No encuentra el repuesto que necesita?
+            </h3>
+            <p class="text-brand-100/85 mt-2 max-w-xl">
+                Envíenos la referencia, la foto o el plano de la pieza. Nuestra
+                red de proveedores cubre marcas nacionales e importadas.
+            </p>
+        </div>
+        <Button
+            href={buildWhatsappUrl(
+                'Hola Solutionsary, necesito ubicar un repuesto específico.'
+            )}
+            variant="inverse"
+            size="lg"
+            icon="lucide:message-circle"
+            iconPosition="start"
+            external
+            class="shrink-0"
+        >
+            Enviar referencia
+        </Button>
+    </div>
+</Section>

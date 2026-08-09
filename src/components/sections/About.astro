@@ -1,0 +1,123 @@
+---
+import { Image } from 'astro:assets'
+import { Icon } from 'astro-icon/components'
+
+import Section from '@components/ui/Section.astro'
+import SectionHeading from '@components/ui/SectionHeading.astro'
+import technicianImage from '@images/about/industrial-technician.jpg'
+import componentsImage from '@images/about/pneumatic-components.jpg'
+import { responsiveImage } from '@utils/responsiveImage'
+---
+
+<Section id="nosotros" tone="white" labelledby="nosotros-title">
+    <div class="grid gap-14 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-6" data-reveal>
+            <SectionHeading
+                id="nosotros-title"
+                eyebrow="Quiénes somos"
+                title="El aliado industrial de la pequeña, mediana y gran empresa"
+            />
+
+            <div
+                class="text-steel-600 mt-7 flex flex-col gap-5 text-lg leading-relaxed"
+            >
+                <p>
+                    Nos dedicamos a la venta y distribución de repuestos,
+                    servicios y mantenimiento de las marcas más reconocidas a
+                    nivel internacional en las áreas hidráulica, eléctrica,
+                    instrumentación electrónica, refrigeración, calderas y
+                    neumática.
+                </p>
+                <p>
+                    Nuestra pericia técnica nos permite ofrecer el mejor
+                    servicio post venta y el asesoramiento que el mercado
+                    industrial exige: no solo entregamos la pieza, ayudamos a
+                    identificar la correcta.
+                </p>
+            </div>
+
+            <div class="mt-10 grid gap-5 sm:grid-cols-2">
+                <div
+                    class="border-steel-200 bg-steel-50 rounded-2xl border p-6"
+                >
+                    <span
+                        class="bg-brand-600 flex size-11 items-center justify-center rounded-xl text-white"
+                    >
+                        <Icon
+                            name="lucide:target"
+                            class="size-5"
+                            aria-hidden="true"
+                        />
+                    </span>
+                    <h3 class="mt-4 text-lg">Misión</h3>
+                    <p class="text-steel-600 mt-2 text-sm leading-relaxed">
+                        Atender las necesidades de nuestros clientes para ser
+                        líderes en suministros, servicios y mantenimiento a
+                        nivel industrial.
+                    </p>
+                </div>
+
+                <div
+                    class="border-steel-200 bg-steel-50 rounded-2xl border p-6"
+                >
+                    <span
+                        class="bg-brand-900 flex size-11 items-center justify-center rounded-xl text-white"
+                    >
+                        <Icon
+                            name="lucide:telescope"
+                            class="size-5"
+                            aria-hidden="true"
+                        />
+                    </span>
+                    <h3 class="mt-4 text-lg">Visión</h3>
+                    <p class="text-steel-600 mt-2 text-sm leading-relaxed">
+                        Mantenernos a la vanguardia en suministros y servicios
+                        industriales a nivel nacional e internacional.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-6" data-reveal style="--reveal-delay: 120ms">
+            <div class="relative">
+                <div class="overflow-hidden rounded-3xl">
+                    <Image
+                        src={technicianImage}
+                        alt="Técnico industrial con casco y chaleco reflectivo dentro de una planta de manufactura"
+                        {...responsiveImage(technicianImage, [500, 800, 1100])}
+                        sizes="(min-width: 1024px) 45vw, 90vw"
+                        quality={74}
+                        class="aspect-4/3 w-full object-cover"
+                        loading="lazy"
+                    />
+                </div>
+
+                <div
+                    class="border-steel-200 bg-steel-50 mt-6 overflow-hidden rounded-3xl border p-6"
+                >
+                    <div class="flex items-center gap-6">
+                        <Image
+                            src={componentsImage}
+                            alt="Surtido de componentes neumáticos: cilindros, válvulas y racores"
+                            widths={[160, 320]}
+                            sizes="128px"
+                            quality={78}
+                            class="size-32 shrink-0 object-contain"
+                            loading="lazy"
+                        />
+                        <div>
+                            <h3 class="text-lg">Inventario técnico amplio</h3>
+                            <p
+                                class="text-steel-600 mt-2 text-sm leading-relaxed"
+                            >
+                                Componentes neumáticos, hidráulicos, eléctricos
+                                e instrumentación de las marcas que ya usa su
+                                planta.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Section>

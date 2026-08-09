@@ -1,0 +1,62 @@
+---
+import { Image } from 'astro:assets'
+
+import BaseLayout from '@layouts/BaseLayout.astro'
+import Button from '@components/ui/Button.astro'
+import logo from '@images/brand/logo-primary.png'
+import { siteConfig } from '@data/siteConfig'
+---
+
+<BaseLayout
+    title={`Página no encontrada | ${siteConfig.legalName}`}
+    description="La página que busca no existe o fue movida."
+>
+    <main
+        class="bg-steel-50 flex min-h-screen flex-col items-center justify-center px-6 py-16 text-center"
+    >
+        <a href="/" aria-label={`${siteConfig.legalName}, ir al inicio`}>
+            <Image
+                src={logo}
+                alt={siteConfig.legalName}
+                widths={[180, 360]}
+                sizes="180px"
+                class="mx-auto h-12 w-auto"
+                loading="eager"
+            />
+        </a>
+
+        <p
+            class="font-display text-brand-600 mt-14 text-sm font-semibold tracking-widest uppercase"
+        >
+            Error 404
+        </p>
+        <h1 class="text-section text-brand-950 mt-4 max-w-xl">
+            Esta página no está en el plano
+        </h1>
+        <p class="text-steel-600 mt-5 max-w-md text-lg">
+            Puede que el enlace esté desactualizado o que la dirección se haya
+            escrito mal. Vuelva al inicio para encontrar lo que necesita.
+        </p>
+
+        <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+            <Button
+                href="/"
+                size="lg"
+                icon="lucide:arrow-left"
+                iconPosition="start"
+            >
+                Volver al inicio
+            </Button>
+            <Button
+                href={siteConfig.contact.whatsappUrl}
+                variant="secondary"
+                size="lg"
+                icon="lucide:message-circle"
+                iconPosition="start"
+                external
+            >
+                Escribir por WhatsApp
+            </Button>
+        </div>
+    </main>
+</BaseLayout>

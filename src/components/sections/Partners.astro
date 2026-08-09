@@ -1,0 +1,86 @@
+---
+import { Image } from 'astro:assets'
+
+import Section from '@components/ui/Section.astro'
+import SectionHeading from '@components/ui/SectionHeading.astro'
+import { partners } from '@data/partners'
+
+// The track is duplicated so the CSS marquee can loop seamlessly at -50%.
+const track = [...partners, ...partners]
+---
+
+<Section id="aliados" tone="white" labelledby="aliados-title">
+    <SectionHeading
+        id="aliados-title"
+        eyebrow="Aliados comerciales"
+        title="Trabajamos con las marcas que su planta ya conoce"
+        description="Nuestra red de proveedores nacionales e internacionales nos permite garantizar el origen y la calidad de cada componente."
+        align="center"
+        class="text-center"
+    />
+
+    <div
+        class="relative mt-14 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
+        data-reveal
+        data-partner-marquee
+    >
+        <ul
+            class="animate-marquee flex w-max items-center gap-14 hover:[animation-play-state:paused] motion-reduce:animate-none motion-reduce:flex-wrap motion-reduce:justify-center"
+        >
+            {
+                track.map((partner, index) => (
+                    <li
+                        class="flex shrink-0 items-center justify-center"
+                        aria-hidden={
+                            index >= partners.length ? 'true' : undefined
+                        }
+                    >
+                        <Image
+                            src={partner.logo}
+                            alt={index >= partners.length ? '' : partner.name}
+                            widths={[160, 320]}
+                            sizes="160px"
+                            class="h-9 w-auto max-w-40 object-contain opacity-60 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0 lg:h-11"
+                            loading="lazy"
+                        />
+                    </li>
+                ))
+            }
+        </ul>
+    </div>
+</Section>
+
+<script>
+    /*
+     * Most logos sit outside the viewport horizontally and only scroll into
+     * view through a CSS transform, which native lazy loading does not react
+     * to. Loading is forced once the marquee itself becomes visible.
+     */
+    const marquee = document.querySelector<HTMLElement>(
+        '[data-partner-marquee]'
+    )
+
+    if (marquee) {
+        const loadAll = () => {
+            marquee
+                .querySelectorAll<HTMLImageElement>('img[loading="lazy"]')
+                .forEach((image) => {
+                    image.loading = 'eager'
+                })
+        }
+
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    if (!entries.some((entry) => entry.isIntersecting)) return
+                    loadAll()
+                    observer.disconnect()
+                },
+                { rootMargin: '200px 0px' }
+            )
+            observer.observe(marquee)
+        } else {
+            loadAll()
+        }
+    }
+</script>

@@ -1,0 +1,237 @@
+@import 'tailwindcss';
+
+@source '../**/*.{astro,html,js,ts}';
+
+/* ------------------------------------------------------------------ */
+/* Design tokens                                                       */
+/* ------------------------------------------------------------------ */
+
+@theme {
+    /*
+     * Scale built around the two colours sampled from the logo artwork:
+     * teal #276e90 (brand-600) and deep navy #0a3143 (brand-900).
+     */
+    --color-brand-50: #f2f8fa;
+    --color-brand-100: #e3f0f5;
+    --color-brand-200: #c0dfeb;
+    --color-brand-300: #8fc6dc;
+    --color-brand-400: #57a5c6;
+    --color-brand-500: #3688ab;
+    --color-brand-600: #276e90;
+    --color-brand-700: #235a76;
+    --color-brand-800: #1b4359;
+    --color-brand-900: #0a3143;
+    --color-brand-950: #05202c;
+
+    /* Safety amber, echoing the hazard markings visible in the project photos */
+    --color-accent-50: #fffbeb;
+    --color-accent-100: #fef3c7;
+    --color-accent-200: #fde68a;
+    --color-accent-300: #fcd34d;
+    --color-accent-400: #fbbf24;
+    --color-accent-500: #f59e0b;
+    --color-accent-600: #d97706;
+    --color-accent-700: #b45309;
+    --color-accent-800: #92400e;
+    --color-accent-900: #78350f;
+    --color-accent-950: #451a03;
+
+    /* Cool neutral scale for an industrial, technical feel */
+    --color-steel-50: #f6f7f9;
+    --color-steel-100: #eceef2;
+    --color-steel-200: #d5dae3;
+    --color-steel-300: #b1bacb;
+    --color-steel-400: #8694ae;
+    --color-steel-500: #667694;
+    --color-steel-600: #515f7a;
+    --color-steel-700: #434d63;
+    --color-steel-800: #3a4253;
+    --color-steel-900: #343a47;
+    --color-steel-950: #22262f;
+
+    --font-sans:
+        'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+        sans-serif;
+    --font-display:
+        'Archivo Variable', 'Inter Variable', ui-sans-serif, system-ui,
+        sans-serif;
+
+    --text-hero: clamp(2.5rem, 6vw, 4.5rem);
+    --text-hero--line-height: 1.02;
+    --text-hero--letter-spacing: -0.03em;
+
+    --text-section: clamp(1.875rem, 3.6vw, 3rem);
+    --text-section--line-height: 1.08;
+    --text-section--letter-spacing: -0.02em;
+
+    --shadow-card:
+        0 1px 2px rgb(10 49 67 / 0.05), 0 12px 32px -12px rgb(10 49 67 / 0.16);
+    --shadow-card-hover:
+        0 2px 4px rgb(10 49 67 / 0.07), 0 24px 48px -16px rgb(10 49 67 / 0.24);
+
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+    --animate-marquee: marquee 45s linear infinite;
+}
+
+@keyframes marquee {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+        /* Offset anchor targets so the sticky header never covers a heading. */
+        scroll-padding-top: 6rem;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        background-color: var(--color-white);
+        color: var(--color-steel-800);
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        font-family: var(--font-display);
+        color: var(--color-brand-950);
+        text-wrap: balance;
+    }
+
+    p {
+        text-wrap: pretty;
+    }
+
+    /*
+     * Amber ring plus navy halo, so the focus indicator stays visible both on
+     * the light sections and on the dark hero, footer and "por qué elegirnos".
+     */
+    :focus-visible {
+        outline: 3px solid var(--color-accent-400);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 6px
+            color-mix(in oklab, var(--color-brand-950) 85%, transparent);
+        border-radius: 2px;
+    }
+
+    ::selection {
+        background-color: var(--color-brand-700);
+        color: var(--color-white);
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* Utilities                                                           */
+/* ------------------------------------------------------------------ */
+
+@utility container-page {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+
+    @media (width >= 1024px) {
+        padding-inline: 2rem;
+    }
+}
+
+/* Diagonal hairline pattern used as a subtle industrial texture. */
+@utility bg-blueprint {
+    background-image: linear-gradient(
+        135deg,
+        color-mix(in oklab, var(--color-brand-600) 8%, transparent) 0 1px,
+        transparent 1px 10px
+    );
+}
+
+/* Small uppercase label that introduces a section. */
+@utility eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-brand-600);
+}
+
+/* ------------------------------------------------------------------ */
+/* Scroll reveal                                                       */
+/* ------------------------------------------------------------------ */
+
+/*
+ * Scoped to .js so the content stays visible when scripting is unavailable,
+ * otherwise everything below the fold would render at opacity 0.
+ */
+.js [data-reveal] {
+    opacity: 0;
+    transform: translateY(1.5rem);
+    transition:
+        opacity 0.7s var(--ease-out-expo),
+        transform 0.7s var(--ease-out-expo);
+    transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js [data-reveal='visible'] {
+    opacity: 1;
+    transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    .js [data-reveal],
+    .js [data-reveal='visible'] {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Custom scrollbar, kept from the previous site but aligned to the tokens. */
+@supports selector(::-webkit-scrollbar) {
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--color-steel-100);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--color-steel-300);
+        border-radius: 999px;
+        border: 2px solid var(--color-steel-100);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-brand-600);
+    }
+}

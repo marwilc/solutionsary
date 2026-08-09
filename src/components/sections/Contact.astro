@@ -1,0 +1,316 @@
+---
+import { Icon } from 'astro-icon/components'
+
+import Section from '@components/ui/Section.astro'
+import SectionHeading from '@components/ui/SectionHeading.astro'
+import { services } from '@data/services'
+import { siteConfig } from '@data/siteConfig'
+
+const { address, email, phoneDisplay, phoneLink, openingHours, mapQuery } =
+    siteConfig.contact
+
+const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`
+
+const contactDetails = [
+    {
+        icon: 'lucide:map-pin',
+        label: 'Dirección',
+        value: `${address.street}, ${address.city}, ${address.region}`,
+        href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`,
+        external: true,
+    },
+    {
+        icon: 'lucide:phone',
+        label: 'Teléfono',
+        value: phoneDisplay,
+        href: `tel:${phoneLink}`,
+        external: false,
+    },
+    {
+        icon: 'lucide:mail',
+        label: 'Correo electrónico',
+        value: email,
+        href: `mailto:${email}`,
+        external: false,
+    },
+    {
+        icon: 'lucide:clock',
+        label: 'Horario de atención',
+        value: openingHours,
+        href: null,
+        external: false,
+    },
+]
+
+const fieldClasses =
+    'w-full rounded-xl border border-steel-200 bg-white px-4 py-3 text-steel-900 placeholder:text-steel-400 transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 focus:outline-none'
+const labelClasses = 'font-display text-sm font-semibold text-brand-900'
+---
+
+<Section id="contacto" tone="muted" labelledby="contacto-title">
+    <div class="grid gap-14 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-5" data-reveal>
+            <SectionHeading
+                id="contacto-title"
+                eyebrow="Contacto"
+                title="Cuéntenos qué necesita su planta"
+                description="Responda en un minuto y le enviamos una propuesta con alcance, tiempos y disponibilidad de repuestos."
+            />
+
+            <ul class="mt-10 flex flex-col gap-6">
+                {
+                    contactDetails.map((detail) => (
+                        <li class="flex gap-4">
+                            <span class="text-brand-700 shadow-card flex size-11 shrink-0 items-center justify-center rounded-xl bg-white">
+                                <Icon
+                                    name={detail.icon}
+                                    class="size-5"
+                                    aria-hidden="true"
+                                />
+                            </span>
+                            <div>
+                                <p class="font-display text-brand-900 text-sm font-semibold">
+                                    {detail.label}
+                                </p>
+                                {detail.href ? (
+                                    <a
+                                        href={detail.href}
+                                        class="text-steel-600 hover:text-brand-700 mt-1 block underline-offset-4 transition hover:underline"
+                                        target={
+                                            detail.external
+                                                ? '_blank'
+                                                : undefined
+                                        }
+                                        rel={
+                                            detail.external
+                                                ? 'noopener noreferrer'
+                                                : undefined
+                                        }
+                                    >
+                                        {detail.value}
+                                    </a>
+                                ) : (
+                                    <p class="text-steel-600 mt-1">
+                                        {detail.value}
+                                    </p>
+                                )}
+                            </div>
+                        </li>
+                    ))
+                }
+            </ul>
+
+            <div
+                class="border-steel-200 mt-10 overflow-hidden rounded-3xl border bg-white"
+            >
+                <iframe
+                    src={mapSrc}
+                    title={`Ubicación de ${siteConfig.legalName} en ${address.city}`}
+                    class="h-64 w-full border-0"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div class="lg:col-span-7" data-reveal style="--reveal-delay: 120ms">
+            <form
+                class="border-steel-200 shadow-card rounded-3xl border bg-white p-8 lg:p-10"
+                action={siteConfig.contactFormEndpoint}
+                method="POST"
+                data-contact-form
+            >
+                <div class="grid gap-6 sm:grid-cols-2">
+                    <div class="flex flex-col gap-2">
+                        <label class={labelClasses} for="contact-name">
+                            Nombre y apellido
+                        </label>
+                        <input
+                            class={fieldClasses}
+                            id="contact-name"
+                            name="nombre"
+                            type="text"
+                            autocomplete="name"
+                            placeholder="Ej. María Pérez"
+                            required
+                        />
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class={labelClasses} for="contact-company">
+                            Empresa
+                        </label>
+                        <input
+                            class={fieldClasses}
+                            id="contact-company"
+                            name="empresa"
+                            type="text"
+                            autocomplete="organization"
+                            placeholder="Ej. Industrias del Centro"
+                        />
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class={labelClasses} for="contact-email">
+                            Correo electrónico
+                        </label>
+                        <input
+                            class={fieldClasses}
+                            id="contact-email"
+                            name="correo"
+                            type="email"
+                            autocomplete="email"
+                            placeholder="nombre@empresa.com"
+                            required
+                        />
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class={labelClasses} for="contact-phone">
+                            Teléfono
+                        </label>
+                        <input
+                            class={fieldClasses}
+                            id="contact-phone"
+                            name="telefono"
+                            type="tel"
+                            autocomplete="tel"
+                            placeholder="0414-0000000"
+                        />
+                    </div>
+
+                    <div class="flex flex-col gap-2 sm:col-span-2">
+                        <label class={labelClasses} for="contact-service">
+                            ¿Qué necesita?
+                        </label>
+                        <select
+                            class={fieldClasses}
+                            id="contact-service"
+                            name="servicio"
+                        >
+                            {
+                                services.map((service) => (
+                                    <option value={service.title}>
+                                        {service.title}
+                                    </option>
+                                ))
+                            }
+                            <option value="Otro">Otro requerimiento</option>
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col gap-2 sm:col-span-2">
+                        <label class={labelClasses} for="contact-message">
+                            Detalle del requerimiento
+                        </label>
+                        <textarea
+                            class={fieldClasses}
+                            id="contact-message"
+                            name="mensaje"
+                            rows="5"
+                            placeholder="Describa la pieza, el equipo o el trabajo que necesita. Si tiene la referencia del repuesto, inclúyala."
+                            required></textarea>
+                    </div>
+                </div>
+
+                <p class="text-steel-500 mt-6 text-sm">
+                    Al enviar acepta que Solutions Ary le contacte por los
+                    medios suministrados para responder su solicitud.
+                </p>
+
+                <div
+                    class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center"
+                >
+                    <button
+                        type="submit"
+                        class="group bg-brand-600 font-display shadow-card hover:bg-brand-700 hover:shadow-card-hover inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 font-semibold text-white transition duration-200 hover:-translate-y-0.5 disabled:pointer-events-none disabled:opacity-60"
+                    >
+                        Enviar solicitud
+                        <Icon
+                            name="lucide:send"
+                            class="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                            aria-hidden="true"
+                        />
+                    </button>
+
+                    <a
+                        href={siteConfig.contact.whatsappUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="border-steel-200 font-display text-brand-900 hover:border-brand-300 hover:bg-brand-50 inline-flex items-center justify-center gap-2 rounded-full border px-7 py-3.5 font-semibold transition"
+                    >
+                        <Icon
+                            name="lucide:message-circle"
+                            class="size-4"
+                            aria-hidden="true"
+                        />
+                        Prefiero WhatsApp
+                    </a>
+                </div>
+
+                <p
+                    class="bg-brand-50 text-brand-900 mt-6 hidden rounded-xl px-4 py-3 text-sm"
+                    role="status"
+                    data-form-feedback
+                >
+                </p>
+            </form>
+        </div>
+    </div>
+</Section>
+
+<script>
+    const form = document.querySelector<HTMLFormElement>('[data-contact-form]')
+    const feedback = document.querySelector<HTMLElement>('[data-form-feedback]')
+
+    if (form && feedback) {
+        const showFeedback = (message: string, isError: boolean) => {
+            feedback.textContent = message
+            feedback.classList.remove('hidden')
+            feedback.classList.toggle('bg-red-50', isError)
+            feedback.classList.toggle('text-red-800', isError)
+            feedback.classList.toggle('bg-brand-50', !isError)
+            feedback.classList.toggle('text-brand-900', !isError)
+        }
+
+        form.addEventListener('submit', async (event) => {
+            // The endpoint is a placeholder until the client confirms the
+            // provider, so the native POST is kept as the fallback path.
+            if (form.action.includes('REEMPLAZAR_ID')) {
+                event.preventDefault()
+                showFeedback(
+                    'El formulario aún no tiene un destino configurado. Escríbanos por WhatsApp mientras tanto.',
+                    true
+                )
+                return
+            }
+
+            event.preventDefault()
+            const submitButton = form.querySelector('button[type="submit"]')
+            submitButton?.setAttribute('disabled', 'true')
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: { Accept: 'application/json' },
+                })
+
+                if (!response.ok) throw new Error('Request failed')
+
+                form.reset()
+                showFeedback(
+                    'Solicitud enviada. Le responderemos en las próximas 24 horas hábiles.',
+                    false
+                )
+            } catch {
+                showFeedback(
+                    'No pudimos enviar el formulario. Intente de nuevo o escríbanos por WhatsApp.',
+                    true
+                )
+            } finally {
+                submitButton?.removeAttribute('disabled')
+            }
+        })
+    }
+</script>

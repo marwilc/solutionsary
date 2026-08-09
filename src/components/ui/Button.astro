@@ -1,0 +1,79 @@
+---
+import { Icon } from 'astro-icon/components'
+
+interface Props {
+    href: string
+    variant?: 'primary' | 'secondary' | 'ghost' | 'inverse'
+    size?: 'md' | 'lg'
+    icon?: string
+    iconPosition?: 'start' | 'end'
+    external?: boolean
+    class?: string
+    ariaLabel?: string
+}
+
+const {
+    href,
+    variant = 'primary',
+    size = 'md',
+    icon,
+    iconPosition = 'end',
+    external = false,
+    class: className = '',
+    ariaLabel,
+} = Astro.props
+
+const base =
+    'group inline-flex items-center justify-center gap-2 rounded-full font-display font-semibold tracking-tight transition duration-200 ease-out'
+
+const variants = {
+    primary:
+        'bg-brand-600 text-white shadow-card hover:bg-brand-700 hover:shadow-card-hover hover:-translate-y-0.5',
+    secondary:
+        'bg-white text-brand-900 ring-1 ring-inset ring-steel-200 hover:ring-brand-300 hover:-translate-y-0.5 hover:shadow-card',
+    ghost: 'text-brand-700 hover:text-brand-900 underline-offset-4 hover:underline',
+    inverse:
+        'bg-white text-brand-900 hover:bg-brand-50 hover:-translate-y-0.5 shadow-card',
+}
+
+const sizes = {
+    md: 'px-5 py-2.5 text-sm',
+    lg: 'px-7 py-3.5 text-base',
+}
+
+const ghostSizes = {
+    md: 'text-sm',
+    lg: 'text-base',
+}
+
+const classes = [
+    base,
+    variants[variant],
+    variant === 'ghost' ? ghostSizes[size] : sizes[size],
+    className,
+]
+    .filter(Boolean)
+    .join(' ')
+
+const externalAttributes = external
+    ? { target: '_blank', rel: 'noopener noreferrer' }
+    : {}
+---
+
+<a href={href} class={classes} aria-label={ariaLabel} {...externalAttributes}>
+    {
+        icon && iconPosition === 'start' && (
+            <Icon name={icon} class="size-4 shrink-0" aria-hidden="true" />
+        )
+    }
+    <slot />
+    {
+        icon && iconPosition === 'end' && (
+            <Icon
+                name={icon}
+                class="size-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5"
+                aria-hidden="true"
+            />
+        )
+    }
+</a>

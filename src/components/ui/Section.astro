@@ -1,0 +1,26 @@
+---
+interface Props {
+    id: string
+    tone?: 'white' | 'muted' | 'dark'
+    class?: string
+    labelledby?: string
+}
+
+const { id, tone = 'white', class: className = '', labelledby } = Astro.props
+
+const tones = {
+    white: 'bg-white',
+    muted: 'bg-steel-50',
+    dark: 'bg-brand-950 text-brand-100',
+}
+---
+
+<section
+    id={id}
+    aria-labelledby={labelledby}
+    class={`scroll-mt-24 py-20 lg:py-28 ${tones[tone]} ${className}`}
+>
+    <div class="container-page">
+        <slot />
+    </div>
+</section>
