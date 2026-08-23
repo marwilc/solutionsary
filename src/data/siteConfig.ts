@@ -3,7 +3,7 @@ export interface NavigationLink {
     href: string
 }
 
-const whatsappNumber = '584144126277'
+const whatsappNumber = '584224503500'
 const whatsappMessage =
     'Hola Solutionsary, necesito una cotización para mi empresa.'
 
@@ -20,8 +20,8 @@ export const siteConfig = {
 
     contact: {
         email: 'supplies@solutionsary.com',
-        phoneDisplay: '0414-4126277',
-        phoneLink: '+584144126277',
+        phoneDisplay: '0422-4503500',
+        phoneLink: '+584224503500',
         whatsappNumber,
         whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`,
         address: {
